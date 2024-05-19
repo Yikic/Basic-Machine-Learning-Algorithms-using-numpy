@@ -35,6 +35,6 @@ Has three hidden layers, only for binary classification and only sigmoid functio
 ### Convolutional Neural Network
 Architecture can be seen in the comments of the class, for addressing image classification problems
 ## Todo
--Adaboost
+- Adaboost
 
 
