@@ -1,5 +1,5 @@
 # Basic Machine Learning Algorithms using numpy
-All algorithms described below are implemented in `utils.py`. Each algorithm is accompanied by examples below its class definition, allowing for quick implementation and testing.
+All algorithms described below are implemented in `utils.py`. Each algorithm is accompanied by examples below its class definition, allowing for quick implementation and testing. Some datasets are provided, plot them to see what they look like.
 ## Supervised Learning
 ### LogisticRegression
 Optimizer is Newton's Method
