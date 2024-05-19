@@ -1,7 +1,6 @@
 # Basic-Machine-Learning-Algorithms-using-numpy
 All the algorithms introduced below are in utils.py, every algorithm has a Examples below the class, you can run the algoithm quickly by the given Examples
-- LogisticRegression
-
+### LogisticRegression
 Optimizer is Newton's Method
 ## Gaussian Descriminant Analysis
 The supervised learning version of Gaussian Mixture Model
