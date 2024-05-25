@@ -8,6 +8,75 @@ import scipy
 
 np.random.seed(42)
 
+
+def qp_lc(h, c, I, e=None):
+    """
+    Notes:
+        - use active set method to solve quadratic programming-linear constraint problem
+        - if there is equality, remember to initialize x to be satisfied, if you have equality more than
+          1, change line 10
+        - only for positive definite matrix
+
+    :param e: augmented matrix
+    :param i: augmented matrix, must be smaller or equal than b
+    """
+
+    m = len(c)
+    x = np.zeros(m)  # must satisfy equality, remember to change it
+
+    if e is not None:
+        # assume there is only one equality
+        A = np.concatenate((I[:,:-1], np.expand_dims(e[:-1],axis=0)), axis=0)
+        b = np.concatenate((I[:,-1],np.expand_dims(e[-1],axis=0)),axis=0)
+        e_len = 1
+    else:
+        A = I[:, :-1]
+        b = I[:, -1]
+        e_len = 0
+    w = []
+    # assume x=0 satisfy all equality
+    for i in range(A.shape[0]):
+        if A[i] @ x == b[i]:
+            w.append(i)
+    A_w = A[w]
+    b_w = b[w]
+    StopFlag = 0
+    k = 0
+
+    while not StopFlag:
+        # solve QP-SUB to get d
+        g = h @ x + c
+        d = - np.linalg.inv(h) @ (np.eye(m) - A_w.T @ np.linalg.inv((A_w @ np.linalg.inv(h) @ A_w.T)+1e-8*np.eye(A_w.shape[0]))
+                                  @ A_w @ np.linalg.inv(h)) @ g
+        if np.all(d <= 1e-8):
+            Lambda = - np.linalg.inv((A_w @ np.linalg.inv(h) @ A_w.T)) @ (A_w @ np.linalg.inv(h) @ c + b_w)
+            if e_len == 0:
+                Lambda_q = np.min(Lambda)
+                q = np.argmin(Lambda)
+            else:
+                Lambda_q = np.min(Lambda[:-e_len])
+                q = np.argmin(Lambda[:-e_len])
+            if Lambda_q >= 0:
+                StopFlag = 1
+            else:
+                A_w = np.concatenate((A_w[:q],A_w[q+1:]), axis=0)
+                b_w = np.concatenate((b_w[:q],b_w[q+1:]), axis=0)
+        else:
+            index = np.where(A@d > 1e-8)[0]
+            temp = np.min((b[index] - A[index] @ x) / (A[index] @ d))
+            p = np.argmin((b[index] - A[index] @ x) / (A[index] @ d))
+            p = index[p]
+            alpha = np.min((temp, 1))
+            x = x + alpha * d
+            if temp <= 1:
+                A_w = np.concatenate((np.expand_dims(A[p],axis=0), A_w), axis=0)
+                b_w = np.concatenate((np.expand_dims(b[p], axis=0), b_w), axis=0)
+
+        k += 1
+
+    return x
+
+
 # use for language process
 with open('stopwords.txt', 'r', encoding='utf-8') as file:
     stopwords = file.read().splitlines()
@@ -161,6 +230,12 @@ def rbf_kernel_matrix(x, predict=False, ori_x=None, radius=0.5):
         gram = x @ x.T
         K = np.exp(- (square.reshape(-1, 1) + square.reshape(1, -1) - 2 * gram) / (2 * radius ** 2))
     return K, square
+
+
+def poly_kernel(x,p):
+    temp = x @ x.T
+    K = (temp + np.ones(temp.shape))**p
+    return K, temp
 
 
 def sign(x):
