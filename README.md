@@ -17,7 +17,7 @@ It's a single perceptron with kernel trick
 ### Tree Series
 - **Decision Tree**: Using ratio to pick the best spilt feature
 - **Random Forest**: Using bootstrap to pick samples, and pick random features to plant decision trees
-- **Xgboost**: boosting version of random forest, for regression only, loss is MSE
+- **XGBoost**: boosting version of random forest, for regression only, loss is MSE
 
 ## Unsupervised Learning
 ### Gaussion Mixture Model
