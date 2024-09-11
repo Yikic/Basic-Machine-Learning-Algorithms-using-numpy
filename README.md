@@ -14,6 +14,7 @@ It's a single perceptron with kernel trick
 ### Support Vector Machine
 - **hard margin**： Hard margin version is only for doing language processing
 - **soft margin**： Soft margin version is implemented refer to Platt's paper which introduce SMO algorithm in dealing with KKT condition
+- **SVR**: SMO algorithm in regression task
 ### Tree Series
 - **Decision Tree**: Using ratio to pick the best spilt feature
 - **Random Forest**: Using bootstrap to pick samples, and pick random features to plant decision trees
